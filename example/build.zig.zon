@@ -1,0 +1,20 @@
+.{
+    .name = .example,
+    .version = "0.0.0",
+    .fingerprint = 0x6eec9b9f14c998d8, // Changing this has security and trust implications.
+    .minimum_zig_version = "0.15.1",
+    .dependencies = .{
+        .psdk = .{
+            .path = "..",
+        },
+        .sdl3 = .{
+            .url = "git+https://github.com/Gota7/zig-sdl3?ref=master#9faa64d008e64d9544c5b62678c68d94a19f5c65",
+            .hash = "sdl3-0.1.1-NmT1QwLtIACUhWb8EvjR1Br2IwHhC1w3hG2-8xtq8XM_",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
