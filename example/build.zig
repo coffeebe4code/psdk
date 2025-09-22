@@ -17,12 +17,12 @@ pub fn build(b: *std.Build) void {
     var exe = b.addExecutable(.{
         .name = exe_name,
         .root_module = app_module,
-        .linkage = .static,
+        .linkage = .dynamic,
     });
     const sdl3_mod = b.dependency("sdl3", .{
         .target = root_target,
         .optimize = optimize,
-        .c_sdl_preferred_linkage = .static,
+        .c_sdl_preferred_linkage = .dynamic,
     });
     exe.root_module.addImport("sdl3", sdl3_mod.module("sdl3"));
 
