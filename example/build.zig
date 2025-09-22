@@ -40,11 +40,16 @@ pub fn build(b: *std.Build) void {
         .name = exe_name,
         .root_module = app_module,
     });
-    const sdl3_mod = b.dependency("sdl3", .{
+    const sdl3_mod = if (root_target.result.os.tag == .windows) b.dependency("sdl3", .{
+        .target = root_target,
+        .optimize = optimize,
+        .c_sdl_preferred_linkage = .static,
+    }) else b.dependency("sdl3", .{
         .target = root_target,
         .optimize = optimize,
         .c_sdl_preferred_linkage = .dynamic,
     });
+
     exe.root_module.addImport("sdl3", sdl3_mod.module("sdl3"));
 
     if (root_target.result.abi.isAndroid()) {
