@@ -36,10 +36,13 @@ pub fn build(b: *std.Build) void {
         .name = exe_name,
         .root_module = app_module,
         .linkage = .dynamic,
+        .use_llvm = true,
+        .use_lld = true,
     }) else b.addExecutable(.{
         .name = exe_name,
         .root_module = app_module,
     });
+
     const sdl3_mod = if (root_target.result.os.tag == .windows) b.dependency("sdl3", .{
         .target = root_target,
         .optimize = optimize,
