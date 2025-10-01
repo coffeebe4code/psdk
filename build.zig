@@ -16,27 +16,6 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    const android_bind_mod = b.addModule("android-bind", .{
-        .root_source_file = b.path("src/android-bind.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
-    _ = android_bind_mod;
-
-    const ios_mod = b.addModule("ios", .{
-        .root_source_file = b.path("src/ios.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
-    _ = ios_mod;
-
-    const ios_bind_mod = b.addModule("ios-bind", .{
-        .root_source_file = b.path("src/ios-bind.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
-    _ = ios_bind_mod;
-
     // Create stub of builtin options.
     const android_builtin_options = std.Build.addOptions(b);
     android_builtin_options.addOption([:0]const u8, "package_name", "");

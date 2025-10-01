@@ -1,8 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
-const androidbind = @import("android-bind.zig");
-
 const android_builtin = struct {
     const ab = @import("android_builtin");
 
