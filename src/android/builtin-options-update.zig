@@ -1,5 +1,7 @@
 //! BuiltinOptionsUpdate will update the *Options
 
+const BuiltinOptionsUpdate = @This();
+
 const std = @import("std");
 const androidbuild = @import("android-build.zig");
 const builtin = @import("builtin");
@@ -53,5 +55,3 @@ fn make(step: *Step, _: Build.Step.MakeOptions) !void {
 
     options.addOption([:0]const u8, "package_name", package_name);
 }
-
-const BuiltinOptionsUpdate = @This();

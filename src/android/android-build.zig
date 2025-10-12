@@ -127,13 +127,14 @@ const AndroidTargetQuery = struct {
     cpu_arch: Target.Cpu.Arch,
     cpu_features_add: Target.Cpu.Feature.Set = Target.Cpu.Feature.Set.empty,
 
-    fn queryTarget(android_target: AndroidTargetQuery) Target.Query {
+    fn queryTarget(android_target: AndroidTargetQuery, apilvl: ApiLevel) Target.Query {
         return .{
             .os_tag = .linux,
             .cpu_model = .baseline,
             .abi = if (android_target.cpu_arch != .arm) .android else .androideabi,
             .cpu_arch = android_target.cpu_arch,
             .cpu_features_add = android_target.cpu_features_add,
+            .android_api_level = @intFromEnum(apilvl),
             // TODO(jae): 2025-05-11
             // Setup Android API Level for Zig 0.14.0+
             // .android_api_level = null,

@@ -8,8 +8,7 @@
             .path = "..",
         },
         .sdl3 = .{
-            .url = "git+https://github.com/Gota7/zig-sdl3?ref=master#9faa64d008e64d9544c5b62678c68d94a19f5c65",
-            .hash = "sdl3-0.1.1-NmT1QwLtIACUhWb8EvjR1Br2IwHhC1w3hG2-8xtq8XM_",
+            .path = "../../sdl3",
         },
     },
     .paths = .{
