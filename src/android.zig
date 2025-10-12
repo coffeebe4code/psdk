@@ -1,13 +1,10 @@
 const std = @import("std");
 const builtin = @import("builtin");
+const ab = @import("android_builtin");
 
-const android_builtin = struct {
-    const ab = @import("android_builtin");
-
-    /// package name extracted from your AndroidManifest.xml file
-    /// ie. "com.zig.sdl2"
-    pub const package_name: [:0]const u8 = ab.package_name;
-};
+/// package name extracted from your AndroidManifest.xml file
+/// ie. "com.zig.sdl2"
+pub const package_name: [:0]const u8 = ab.package_name;
 
 /// Default to the "package" attribute defined in AndroidManifest.xml
 ///
@@ -19,7 +16,7 @@ const android_builtin = struct {
 /// logs with the package name.
 ///
 /// To workaround this, we bake the package name into the Zig binaries.
-const log_tag: [:0]const u8 = android_builtin.package_name;
+const log_tag: [:0]const u8 = package_name;
 
 /// Writes the constant string text to the log, with priority prio and tag tag.
 /// Returns: 1 if the message was written to the log, or -EPERM if it was not; see __android_log_is_loggable().

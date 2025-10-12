@@ -1,6 +1,7 @@
 const std = @import("std");
 const AndroidBuild = @import("src/android/android-build.zig");
 
+pub const Psdk = @import("src/psdk.zig");
 pub const AndroidSdk = @import("src/android/sdk.zig");
 pub const AndroidApk = @import("src/android/apk.zig");
 pub const AndroidApiLevel = AndroidBuild.ApiLevel;

@@ -23,21 +23,12 @@ const BuildTools = @import("build-tools.zig");
 
 b: *Build,
 
-/// On most platforms this will map to the $ANDROID_HOME environment variable
 android_sdk_path: []const u8,
-/// $JDK_HOME, $JAVA_HOME or auto-discovered from java binaries found in $PATH
 jdk_path: []const u8,
-/// ie. $ANDROID_HOME/platform-tools
 platform_tools: struct {
     adb: []const u8,
 },
-/// ie. $ANDROID_HOME/cmdline_tools/bin or $ANDROID_HOME/tools/bin
-///
-/// Available to download at: https://developer.android.com/studio#command-line-tools-only
-/// The commandline tools ZIP expected looks like: commandlinetools-{OS}-11076708_latest.zip
 cmdline_tools: struct {
-    /// lint [flags] <project directory>
-    /// See documentation: https://developer.android.com/studio/write/lint#commandline
     lint: []const u8,
     sdkmanager: []const u8,
 },
@@ -109,7 +100,7 @@ pub fn create(b: *std.Build, options: Options) *Sdk {
     // - 1st: $ANDROID_HOME/cmdline-tools/bin
     // - 2nd: $ANDROID_HOME/tools/bin
     const cmdline_tools_path = cmdlineblk: {
-        const cmdline_tools = b.pathResolve(&[_][]const u8{ android_sdk_path, "cmdline-tools", "latest", "bin" });
+        const cmdline_tools = b.pathResolve(&[_][]const u8{ android_sdk_path, "cmdline-tools", "bin" });
         std.fs.accessAbsolute(cmdline_tools, .{}) catch |cmderr| switch (cmderr) {
             error.FileNotFound => {
                 const tools = b.pathResolve(&[_][]const u8{ android_sdk_path, "tools", "bin" });
@@ -310,9 +301,6 @@ pub fn createKeyStore(sdk: *const Sdk, options: CreateKey) KeyStore {
         "-dname",
         options.distinguished_name,
     });
-    // ignore stderr, it just gives you an output like:
-    // "Generating 4,096 bit RSA key pair and self-signed certificate (SHA384withRSA) with a validity of 10,000 days
-    // for: CN=example.com, OU=ID, O=Example, L=Doe, ST=Jane, C=GB"
     _ = keytool.captureStdErr(.{});
     return .{
         .file = keystore_file,
