@@ -96,22 +96,30 @@ pub fn create(b: *std.Build, options: Options) *Sdk {
         printErrorsAndExit("unable to find required Android installation", errors.items);
     }
 
-    // Get commandline tools path
-    // - 1st: $ANDROID_HOME/cmdline-tools/bin
-    // - 2nd: $ANDROID_HOME/tools/bin
     const cmdline_tools_path = cmdlineblk: {
         const cmdline_tools = b.pathResolve(&[_][]const u8{ android_sdk_path, "cmdline-tools", "bin" });
         std.fs.accessAbsolute(cmdline_tools, .{}) catch |cmderr| switch (cmderr) {
             error.FileNotFound => {
                 const tools = b.pathResolve(&[_][]const u8{ android_sdk_path, "tools", "bin" });
-                // Check if Commandline tools path is accessible
                 std.fs.accessAbsolute(tools, .{}) catch |toolerr| switch (toolerr) {
                     error.FileNotFound => {
-                        const message = b.fmt("Android Command Line Tools not found. Expected at: {s} or {s}", .{
-                            cmdline_tools,
-                            tools,
-                        });
-                        errors.append(b.allocator, message) catch @panic("OOM");
+                        const last_tools = b.pathResolve(&[_][]const u8{ android_sdk_path, "cmdline-tools", "latest", "bin" });
+                        std.fs.accessAbsolute(last_tools, .{}) catch |tlerr| switch (tlerr) {
+                            error.FileNotFound => {
+                                const message = b.fmt("Android Command Line Tools not found. Expected at: {s} or {s}", .{
+                                    cmdline_tools,
+                                    tools,
+                                });
+                                errors.append(b.allocator, message) catch @panic("OOM");
+                            },
+                            else => {
+                                const message = b.fmt("Android Command Line Tools path had unexpected error: {s} ({s})", .{
+                                    @errorName(tlerr),
+                                    tools,
+                                });
+                                errors.append(b.allocator, message) catch @panic("OOM");
+                            },
+                        };
                     },
                     else => {
                         const message = b.fmt("Android Command Line Tools path had unexpected error: {s} ({s})", .{

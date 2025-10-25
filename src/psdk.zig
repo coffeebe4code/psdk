@@ -45,6 +45,16 @@ pub fn createAndroidEnv(self: *Psdk, key: AndroidSdk.CreateKey, opts: AndroidApk
 }
 
 pub fn handleBuild(self: *Psdk, mod: *std.Build.Module, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) *std.Build.Step.Compile {
+    const sdl3_mod = if (target.result.os.tag == .windows) self.b.dependency("sdl3", .{
+        .target = target,
+        .optimize = optimize,
+        .preferred_linkage = .static,
+    }) else self.b.dependency("sdl3", .{
+        .target = target,
+        .optimize = optimize,
+        .preferred_linkage = .dynamic,
+    });
+
     var exe: *std.Build.Step.Compile = if (target.result.abi.isAndroid()) self.b.addLibrary(.{
         .name = self.exe_name,
         .root_module = mod,
@@ -56,17 +66,7 @@ pub fn handleBuild(self: *Psdk, mod: *std.Build.Module, target: std.Build.Resolv
         .root_module = mod,
     });
 
-    const sdl3_mod = if (target.result.os.tag == .windows) self.b.dependency("sdl3", .{
-        .target = target,
-        .optimize = optimize,
-        .c_sdl_preferred_linkage = .static,
-    }) else self.b.dependency("sdl3", .{
-        .target = target,
-        .optimize = optimize,
-        .c_sdl_preferred_linkage = .dynamic,
-    });
-
-    exe.root_module.addImport("sdl3", sdl3_mod.module("sdl3"));
+    mod.addImport("sdl3", sdl3_mod.module("sdl3"));
 
     if (target.result.abi.isAndroid()) {
         const android_dep = self.b.dependency("psdk", .{
